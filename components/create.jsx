@@ -23,8 +23,44 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 import SocialProfileSimple from "./card";
+import { useContext } from "react";
+import { GlobalContext } from "../contexts/GlobalContext";
 
 export default function CreateComponent() {
+  const { setAccount, account } = useContext(GlobalContext);
+
+  // IF the user clicks the LOGIN BUTTON
+  async function loginExtension() {
+    if (!window.ethereum) {
+      alert("Please connect to Universal Profile Extension or MetaMask");
+      return;
+    }
+
+    try {
+      // request access to the extension
+      await window.ethereum
+        .request({
+          method: "eth_requestAccounts",
+        })
+
+        .then(function (accounts) {
+          // check if any number of accounts was returned
+          // IF go to the dashboard
+          if (accounts.length) {
+            router.push("/browse");
+            setAccount(accounts[0]);
+          } else {
+            console.log("User denied access");
+          }
+        });
+    } catch (error) {
+      if (error.message === "User denied access") {
+        console.log("User denied access");
+      } else {
+        console.log(error);
+      }
+    }
+  }
   return (
     <Container maxW={"7xl"}>
       <Stack
@@ -37,7 +73,7 @@ export default function CreateComponent() {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: "column", sm: "row" }}
           >
-            <Tabs variant="soft-rounded" colorScheme={"red"}>
+            <Tabs variant="soft-rounded" colorScheme={"red"} w={"full"}>
               <TabList mb="1em">
                 <Tab color={"white"}>Profile Details</Tab>
                 <Tab color={"white"}>Links</Tab>
@@ -53,16 +89,16 @@ export default function CreateComponent() {
                     p={6}
                     textAlign={"center"}
                   >
-                    <Stack spacing={4}>
+                    <Stack spacing={5}>
                       <FormControl id="email">
-                        <FormLabel>Title</FormLabel>
+                        <FormLabel>Name</FormLabel>
                         <Input type="email" />
                       </FormControl>
                       <FormControl id="password">
-                        <FormLabel>URL</FormLabel>
+                        <FormLabel>Profile picture</FormLabel>
                         <Input type="password" />
                       </FormControl>
-                      <Stack spacing={10}>
+                      <Stack spacing={1}>
                         <Button
                           bg={"blue.400"}
                           color={"white"}
@@ -70,7 +106,7 @@ export default function CreateComponent() {
                             bg: "blue.500",
                           }}
                         >
-                          Add
+                          Save
                         </Button>
                       </Stack>
                     </Stack>
@@ -86,7 +122,7 @@ export default function CreateComponent() {
                     p={6}
                     textAlign={"center"}
                   >
-                    <Stack spacing={4}>
+                    <Stack spacing={5}>
                       <FormControl id="email">
                         <FormLabel>Title</FormLabel>
                         <Input type="email" />
@@ -95,7 +131,7 @@ export default function CreateComponent() {
                         <FormLabel>URL</FormLabel>
                         <Input type="password" />
                       </FormControl>
-                      <Stack spacing={10}>
+                      <Stack spacing={1}>
                         <Button
                           bg={"blue.400"}
                           color={"white"}
@@ -111,6 +147,10 @@ export default function CreateComponent() {
                 </TabPanel>
               </TabPanels>
             </Tabs>
+            {!account && (
+              <Button onClick={loginExtension}>Connect Wallet</Button>
+            )}
+
             {/* <Button
               colorScheme={"green"}
               bg={"green.400"}
@@ -122,63 +162,6 @@ export default function CreateComponent() {
             >
               Add Link
             </Button> */}
-          </Stack>
-
-          <Heading
-            lineHeight={1.1}
-            fontWeight={600}
-            fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-          >
-            <Text
-              as={"span"}
-              position={"relative"}
-              _after={{
-                content: "''",
-                width: "full",
-                height: "30%",
-                position: "absolute",
-                bottom: 1,
-                left: 0,
-                bg: "white",
-                zIndex: -1,
-              }}
-            >
-              Write once,
-            </Text>
-            <br />
-            <Text as={"span"} color={"white"}>
-              use everywhere!
-            </Text>
-          </Heading>
-          <Text color={"white"}>
-            Snippy is a rich coding snippets app that lets you create your own
-            code snippets, categorize them, and even sync them in the cloud so
-            you can use them anywhere. All that is free!
-          </Text>
-          <Stack
-            spacing={{ base: 4, sm: 6 }}
-            direction={{ base: "column", sm: "row" }}
-          >
-            <Button
-              rounded={"full"}
-              size={"lg"}
-              fontWeight={"normal"}
-              px={6}
-              colorScheme={"red"}
-              bg={"red.400"}
-              _hover={{ bg: "red.500" }}
-            >
-              Get started
-            </Button>
-            <Button
-              rounded={"full"}
-              size={"lg"}
-              fontWeight={"normal"}
-              px={6}
-              leftIcon={<PlayIcon h={4} w={4} color={"gray.300"} />}
-            >
-              How It Works
-            </Button>
           </Stack>
         </Stack>
         <Flex

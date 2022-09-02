@@ -50,10 +50,10 @@ export default function SocialProfileSimple() {
           </Link>{" "}
           me in your posts
         </Text>
-        <LinkBox />
-        <LinkBox />
-        <LinkBox />
-        <LinkBox />
+        <LinkBox title={"Link 1"} />
+        <LinkBox title={"Link 2"} />
+        <LinkBox title={"Link 3"} />
+        <LinkBox title={"Link 4"} />
       </Box>
     </Center>
   );
