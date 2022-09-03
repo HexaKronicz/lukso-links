@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useRef } from "react";
 import Web3 from "web3";
-import LSP7Artifact from "../utils/forum-lsp7-artifact.json";
+import LSP7Artifact from "../utils/LuksoLinksArtifact.json";
 import { IPFS_GATEWAY_BASE_URL, LSP7Address, RPC_URLS } from "../constants";
 import { useRouter } from "next/router";
 import {
