@@ -12,12 +12,12 @@ import {
 } from "@chakra-ui/react";
 import LinkBox from "./link";
 
-export default function ProfileCard({ links }) {
+export default function ProfileCard({ links, name, intro, picture }) {
   return (
     <Center py={6} pt={12}>
       <Box
         maxW={"320px"}
-        w={"full"}
+        w={"320px"}
         bg={useColorModeValue("white", "gray.900")}
         boxShadow={"2xl"}
         rounded={"lg"}
@@ -26,29 +26,20 @@ export default function ProfileCard({ links }) {
       >
         <Avatar
           size={"xl"}
-          src={
-            "https://images.unsplash.com/photo-1520810627419-35e362c5dc07?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-          }
+          src={picture || "https://i.imgur.com/5QI9Ury.jpeg"}
           alt={"Avatar Alt"}
           mb={4}
           pos={"relative"}
         />
         <Heading fontSize={"2xl"} fontFamily={"body"}>
-          Lindsey James
+          {name}
         </Heading>
-        <Text fontWeight={600} color={"gray.500"} mb={4}>
-          @lindsey_jam3s
-        </Text>
         <Text
           textAlign={"center"}
           color={useColorModeValue("gray.700", "gray.400")}
           px={3}
         >
-          Actress, musician, songwriter and artist. PM for work inquires or{" "}
-          <Link href={"#"} color={"blue.400"}>
-            #tag
-          </Link>{" "}
-          me in your posts
+          {intro}
         </Text>
         {links.map((l) => (
           <LinkBox title={l.title} key={l.id} />

@@ -32,17 +32,21 @@ import ipfsNode from "../utils/ipfs-node";
 
 export default function CreateComponent() {
   const { setAccount, account, LSP7Contract } = useContext(GlobalContext);
-  const [links, setLinks] = useState([{ id: 1, title: "Link 1", url: "URL" }]);
+  const [links, setLinks] = useState([]);
   const [profileDetails, setProfileDetails] = useState();
-  const profileNameRef = useRef();
-  const profilePictureRef = useRef();
-  const profileIntroRef = useRef();
+  const [profileName, setProfileName] = useState();
+  const [profilePicture, setProfilePicture] = useState(
+    "https://i.imgur.com/5QI9Ury.jpeg"
+  );
+  const [profilePictureView, setProfilePictureView] = useState();
+  const [profileIntro, setProfileIntro] = useState();
 
   const addProfileDetails = async () => {
-    const name = profileNameRef.current.value;
-    const picture = profilePictureRef.current.value;
-    const intro = profileIntroRef.current.value;
-    setProfileDetails({ name: name, picure: picture, intro: intro });
+    setProfileDetails({
+      name: profileName,
+      picure: profilePicture,
+      intro: profileIntro,
+    });
   };
 
   const addLink = async (data) => {
@@ -80,7 +84,7 @@ export default function CreateComponent() {
     try {
       if (cid) {
         const tx = await LSP7Contract.methods
-          .createPost(cid)
+          .createLink(cid)
           .send({ from: account });
 
         if (tx.status) {
@@ -90,7 +94,6 @@ export default function CreateComponent() {
     } catch (err) {
       if (err.code == 4001) {
         console.log("User rejected transaction");
-        setLoading(false);
         return;
       }
       console.log(err, "err");
@@ -131,7 +134,6 @@ export default function CreateComponent() {
   }
   return (
     <Container maxW={"7xl"}>
-      {account && <Button>{account}</Button>}
       <Stack
         spacing={{ base: 8, md: 10 }}
         py={{ base: 20, md: 28 }}
@@ -162,15 +164,25 @@ export default function CreateComponent() {
                     <Stack spacing={5}>
                       <FormControl id="name">
                         <FormLabel>Name</FormLabel>
-                        <Input type="text" ref={profileNameRef} />
+                        <Input
+                          type="text"
+                          onChange={(e) => {
+                            setProfileName(e.target.value);
+                          }}
+                        />
                       </FormControl>
                       <FormControl id="picture">
                         <FormLabel>Profile picture</FormLabel>
-                        <Input ref={profilePictureRef} type="file" />
+                        <Input
+                          type="file"
+                          onChange={(e) => setProfilePicture(e.target.value)}
+                        />
                       </FormControl>
                       <FormControl id="description">
                         <FormLabel>Intro</FormLabel>
-                        <Textarea ref={profileIntroRef} />
+                        <Textarea
+                          onChange={(e) => setProfileIntro(e.target.value)}
+                        />
                       </FormControl>
                       <Stack spacing={1}>
                         <Button
@@ -252,7 +264,12 @@ export default function CreateComponent() {
           position={"relative"}
           w={"full"}
         >
-          <ProfileCard links={links} />
+          <ProfileCard
+            links={links}
+            name={profileName}
+            intro={profileIntro}
+            picture={profilePictureView}
+          />
         </Flex>
       </Stack>
     </Container>

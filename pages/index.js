@@ -46,11 +46,7 @@ export default function CallToActionWithAnnotation() {
                 >
                   Share your all profiles in one link
                 </Heading>
-                <Text color={"white"}>
-                  Monetize your content by charging your most loyal readers and
-                  reward them loyalty points. Give back to your loyal readers by
-                  granting them access to your pre-releases and sneak-peaks.
-                </Text>
+
                 <Stack
                   direction={"column"}
                   spacing={3}
