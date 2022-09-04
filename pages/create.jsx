@@ -20,7 +20,8 @@ export default function CallToActionWithAnnotation() {
     <>
       <Flex
         w={"full"}
-        h={"100vh"}
+        h={"full"}
+        minH={"100vh"}
         bgGradient="linear(to-l, #7928CA, #FF0080)"
         backgroundSize={"cover"}
         backgroundPosition={"center center"}

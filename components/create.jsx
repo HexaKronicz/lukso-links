@@ -22,12 +22,15 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import SocialProfileSimple from "./card";
 import { useContext } from "react";
 import { GlobalContext } from "../contexts/GlobalContext";
+import { Textarea } from "@chakra-ui/react";
+import ProfileCard from "./profileCard";
+import AddLinkCard from "./addLinkCard";
 
 export default function CreateComponent() {
   const { setAccount, account } = useContext(GlobalContext);
+  const links = [{ id: 1, title: "Link 1", url: "URL" }];
 
   // IF the user clicks the LOGIN BUTTON
   async function loginExtension() {
@@ -47,7 +50,7 @@ export default function CreateComponent() {
           // check if any number of accounts was returned
           // IF go to the dashboard
           if (accounts.length) {
-            router.push("/browse");
+            router.push("/create");
             setAccount(accounts[0]);
           } else {
             console.log("User denied access");
@@ -63,6 +66,7 @@ export default function CreateComponent() {
   }
   return (
     <Container maxW={"7xl"}>
+      {account && <Button>{account}</Button>}
       <Stack
         spacing={{ base: 8, md: 10 }}
         py={{ base: 20, md: 28 }}
@@ -90,13 +94,17 @@ export default function CreateComponent() {
                     textAlign={"center"}
                   >
                     <Stack spacing={5}>
-                      <FormControl id="email">
+                      <FormControl id="name">
                         <FormLabel>Name</FormLabel>
                         <Input type="email" />
                       </FormControl>
-                      <FormControl id="password">
+                      <FormControl id="picture">
                         <FormLabel>Profile picture</FormLabel>
-                        <Input type="password" />
+                        <Input type="file" />
+                      </FormControl>
+                      <FormControl id="description">
+                        <FormLabel>Intro</FormLabel>
+                        <Textarea />
                       </FormControl>
                       <Stack spacing={1}>
                         <Button
@@ -106,50 +114,20 @@ export default function CreateComponent() {
                             bg: "blue.500",
                           }}
                         >
-                          Save
+                          Create profile
                         </Button>
                       </Stack>
                     </Stack>
                   </Box>
                 </TabPanel>
                 <TabPanel>
-                  <Box
-                    maxW={"520px"}
-                    w={"full"}
-                    bg={useColorModeValue("white", "gray.900")}
-                    boxShadow={"2xl"}
-                    rounded={"lg"}
-                    p={6}
-                    textAlign={"center"}
-                  >
-                    <Stack spacing={5}>
-                      <FormControl id="email">
-                        <FormLabel>Title</FormLabel>
-                        <Input type="email" />
-                      </FormControl>
-                      <FormControl id="password">
-                        <FormLabel>URL</FormLabel>
-                        <Input type="password" />
-                      </FormControl>
-                      <Stack spacing={1}>
-                        <Button
-                          bg={"blue.400"}
-                          color={"white"}
-                          _hover={{
-                            bg: "blue.500",
-                          }}
-                        >
-                          Add
-                        </Button>
-                      </Stack>
-                    </Stack>
-                  </Box>
+                  <AddLinkCard edit={true} link={"yo yo"} />
+                  {links.map((l) => (
+                    <AddLinkCard link={l} key={l.id} />
+                  ))}
                 </TabPanel>
               </TabPanels>
             </Tabs>
-            {!account && (
-              <Button onClick={loginExtension}>Connect Wallet</Button>
-            )}
 
             {/* <Button
               colorScheme={"green"}
@@ -167,11 +145,11 @@ export default function CreateComponent() {
         <Flex
           flex={1}
           justify={"center"}
-          align={"center"}
+          align={"start"}
           position={"relative"}
           w={"full"}
         >
-          <SocialProfileSimple />
+          <ProfileCard links={links} />
         </Flex>
       </Stack>
     </Container>

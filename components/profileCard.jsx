@@ -12,9 +12,9 @@ import {
 } from "@chakra-ui/react";
 import LinkBox from "./link";
 
-export default function SocialProfileSimple() {
+export default function ProfileCard({ links }) {
   return (
-    <Center py={6}>
+    <Center py={6} pt={12}>
       <Box
         maxW={"320px"}
         w={"full"}
@@ -50,10 +50,9 @@ export default function SocialProfileSimple() {
           </Link>{" "}
           me in your posts
         </Text>
-        <LinkBox title={"Link 1"} />
-        <LinkBox title={"Link 2"} />
-        <LinkBox title={"Link 3"} />
-        <LinkBox title={"Link 4"} />
+        {links.map((l) => (
+          <LinkBox title={l.title} />
+        ))}
       </Box>
     </Center>
   );

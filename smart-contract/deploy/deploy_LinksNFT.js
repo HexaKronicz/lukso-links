@@ -4,7 +4,7 @@ const deployLinksNFT = async ({ deployments, getNamedAccounts }) => {
   const { deploy } = deployments;
   const { owner } = await getNamedAccounts();
 
-  await deploy("ForumNFT", {
+  await deploy("LinksNFT", {
     from: owner,
     args: [
       "LuksoLinks",

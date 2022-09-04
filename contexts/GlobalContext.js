@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useRef } from "react";
 import Web3 from "web3";
 import LSP7Artifact from "../utils/LuksoLinksArtifact.json";
-import { IPFS_GATEWAY_BASE_URL, LSP7Address, RPC_URLS } from "../constants";
+import { IPFS_GATEWAY_BASE_URL, LSP7Address } from "../constants";
 import { useRouter } from "next/router";
 import {
   checkBrowserCompatibility,
@@ -44,19 +44,19 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const fetchLSP3Data = async (address) => {
-    const provider = new Web3.providers.HttpProvider(RPC_URLS.L16);
-    try {
-      const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
-      const profile = new ERC725(erc725Schema, address, provider, config);
-      const LSP3Profile = await profile.fetchData("LSP3Profile");
-      console.log(LSP3Profile);
-      return LSP3Profile;
-    } catch (er) {
-      // console.log(er)
-      return false;
-    }
-  };
+  // const fetchLSP3Data = async (address) => {
+  //   const provider = new Web3.providers.HttpProvider(RPC_URLS.L16);
+  //   try {
+  //     const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
+  //     const profile = new ERC725(erc725Schema, address, provider, config);
+  //     const LSP3Profile = await profile.fetchData("LSP3Profile");
+  //     console.log(LSP3Profile);
+  //     return LSP3Profile;
+  //   } catch (er) {
+  //     // console.log(er)
+  //     return false;
+  //   }
+  // };
 
   const fetchPosts = async () => {
     try {
@@ -65,7 +65,7 @@ const GlobalProvider = ({ children }) => {
         1: tokenCounter,
         2: commentCounter,
         3: admin,
-      } = await LSP7Contract.methods.fetchPosts().call();
+      } = await LSP7Contract.methods.fetchLinks().call();
 
       let formattedPostsList = [];
       await Promise.all(
