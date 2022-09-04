@@ -51,7 +51,7 @@ export default function ProfileCard({ links }) {
           me in your posts
         </Text>
         {links.map((l) => (
-          <LinkBox title={l.title} />
+          <LinkBox title={l.title} key={l.id} />
         ))}
       </Box>
     </Center>

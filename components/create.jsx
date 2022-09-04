@@ -21,8 +21,9 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  ButtonGroup,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { GlobalContext } from "../contexts/GlobalContext";
 import { Textarea } from "@chakra-ui/react";
 import ProfileCard from "./profileCard";
@@ -30,7 +31,38 @@ import AddLinkCard from "./addLinkCard";
 
 export default function CreateComponent() {
   const { setAccount, account } = useContext(GlobalContext);
-  const links = [{ id: 1, title: "Link 1", url: "URL" }];
+  const [links, setLinks] = useState([{ id: 1, title: "Link 1", url: "URL" }]);
+  const [profileDetails, setProfileDetails] = useState();
+  const profileNameRef = useRef();
+  const profilePictureRef = useRef();
+  const profileIntroRef = useRef();
+
+  const addProfileDetails = async (data) => {
+    const name = profileNameRef.current.value;
+    const picture = profilePictureRef.current.value;
+    const intro = profileIntroRef.current.value;
+    setProfileDetails({ name: name, picure: picture, intro: intro });
+  };
+
+  const addLink = async (data) => {
+    const id = links.length + 1;
+    setLinks([...links, { id: id, title: data.title, url: data.url }]);
+  };
+
+  const updateLink = async (data) => {
+    setLinks(
+      links.map((link) =>
+        link.id == data.id
+          ? { id: data.id, title: data.title, url: data.url }
+          : link
+      )
+    );
+    console.log(links);
+  };
+
+  const deleteLink = async (data) => {
+    setLinks(links.filter((link) => link.id !== data.id));
+  };
 
   // IF the user clicks the LOGIN BUTTON
   async function loginExtension() {
@@ -82,6 +114,9 @@ export default function CreateComponent() {
                 <Tab color={"white"}>Profile Details</Tab>
                 <Tab color={"white"}>Links</Tab>
               </TabList>
+              <ButtonGroup>
+                <Button justifySelf="right">Publish</Button>
+              </ButtonGroup>
               <TabPanels>
                 <TabPanel>
                   <Box
@@ -96,34 +131,45 @@ export default function CreateComponent() {
                     <Stack spacing={5}>
                       <FormControl id="name">
                         <FormLabel>Name</FormLabel>
-                        <Input type="email" />
+                        <Input ref={profileNameRef} type="email" />
                       </FormControl>
                       <FormControl id="picture">
                         <FormLabel>Profile picture</FormLabel>
-                        <Input type="file" />
+                        <Input ref={profilePictureRef} type="file" />
                       </FormControl>
                       <FormControl id="description">
                         <FormLabel>Intro</FormLabel>
-                        <Textarea />
+                        <Textarea ref={profileIntroRef} />
                       </FormControl>
                       <Stack spacing={1}>
                         <Button
+                          onClick={addProfileDetails}
                           bg={"blue.400"}
                           color={"white"}
                           _hover={{
                             bg: "blue.500",
                           }}
                         >
-                          Create profile
+                          Save profile
                         </Button>
                       </Stack>
                     </Stack>
                   </Box>
                 </TabPanel>
                 <TabPanel>
-                  <AddLinkCard edit={true} link={"yo yo"} />
+                  <AddLinkCard
+                    edit={true}
+                    link={links}
+                    add={true}
+                    addLink={addLink}
+                  />
                   {links.map((l) => (
-                    <AddLinkCard link={l} key={l.id} />
+                    <AddLinkCard
+                      link={l}
+                      key={l.id}
+                      updateLink={updateLink}
+                      deleteLink={deleteLink}
+                    />
                   ))}
                 </TabPanel>
               </TabPanels>
