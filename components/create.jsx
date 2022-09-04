@@ -28,16 +28,17 @@ import { GlobalContext } from "../contexts/GlobalContext";
 import { Textarea } from "@chakra-ui/react";
 import ProfileCard from "./profileCard";
 import AddLinkCard from "./addLinkCard";
+import ipfsNode from "../utils/ipfs-node";
 
 export default function CreateComponent() {
-  const { setAccount, account } = useContext(GlobalContext);
+  const { setAccount, account, LSP7Contract } = useContext(GlobalContext);
   const [links, setLinks] = useState([{ id: 1, title: "Link 1", url: "URL" }]);
   const [profileDetails, setProfileDetails] = useState();
   const profileNameRef = useRef();
   const profilePictureRef = useRef();
   const profileIntroRef = useRef();
 
-  const addProfileDetails = async (data) => {
+  const addProfileDetails = async () => {
     const name = profileNameRef.current.value;
     const picture = profilePictureRef.current.value;
     const intro = profileIntroRef.current.value;
@@ -62,6 +63,38 @@ export default function CreateComponent() {
 
   const deleteLink = async (data) => {
     setLinks(links.filter((link) => link.id !== data.id));
+  };
+
+  const publish = async () => {
+    let cid;
+    const data = { profile: profileDetails, links: links };
+    try {
+      const ipfs = ipfsNode();
+      const postJson = JSON.stringify(data);
+      const ipfsResult = await ipfs.add({ content: postJson, pin: true });
+      cid = ipfsResult.cid.toString();
+      console.log(cid);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      if (cid) {
+        const tx = await LSP7Contract.methods
+          .createPost(cid)
+          .send({ from: account });
+
+        if (tx.status) {
+          console.log(authorAttrs, "authorAttrs");
+        }
+      }
+    } catch (err) {
+      if (err.code == 4001) {
+        console.log("User rejected transaction");
+        setLoading(false);
+        return;
+      }
+      console.log(err, "err");
+    }
   };
 
   // IF the user clicks the LOGIN BUTTON
@@ -113,10 +146,8 @@ export default function CreateComponent() {
               <TabList mb="1em">
                 <Tab color={"white"}>Profile Details</Tab>
                 <Tab color={"white"}>Links</Tab>
+                <Tab color={"white"}>Publish</Tab>
               </TabList>
-              <ButtonGroup>
-                <Button justifySelf="right">Publish</Button>
-              </ButtonGroup>
               <TabPanels>
                 <TabPanel>
                   <Box
@@ -131,7 +162,7 @@ export default function CreateComponent() {
                     <Stack spacing={5}>
                       <FormControl id="name">
                         <FormLabel>Name</FormLabel>
-                        <Input ref={profileNameRef} type="email" />
+                        <Input type="text" ref={profileNameRef} />
                       </FormControl>
                       <FormControl id="picture">
                         <FormLabel>Profile picture</FormLabel>
@@ -171,6 +202,32 @@ export default function CreateComponent() {
                       deleteLink={deleteLink}
                     />
                   ))}
+                </TabPanel>
+                <TabPanel>
+                  <Box
+                    maxW={"520px"}
+                    w={"full"}
+                    bg={useColorModeValue("white", "gray.900")}
+                    boxShadow={"2xl"}
+                    rounded={"lg"}
+                    p={6}
+                    textAlign={"center"}
+                  >
+                    <Stack spacing={5}>
+                      <Stack spacing={1}>
+                        <Button
+                          onClick={publish}
+                          bg={"blue.400"}
+                          color={"white"}
+                          _hover={{
+                            bg: "blue.500",
+                          }}
+                        >
+                          Publish profile
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </Box>
                 </TabPanel>
               </TabPanels>
             </Tabs>
