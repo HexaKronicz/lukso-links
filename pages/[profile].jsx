@@ -17,7 +17,7 @@ export default function WithBackgroundImage() {
         bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
       >
         <Stack maxW={"2xl"} align={"center"} spacing={6}>
-          <ProfileCard />
+          {/* <ProfileCard /> */}
         </Stack>
       </VStack>
     </Flex>
