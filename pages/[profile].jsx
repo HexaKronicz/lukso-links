@@ -1,5 +1,5 @@
 import { Stack, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
-import SocialProfileSimple from "../components/card";
+import ProfileCard from "../components/profileCard";
 
 export default function WithBackgroundImage() {
   return (
@@ -17,7 +17,7 @@ export default function WithBackgroundImage() {
         bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
       >
         <Stack maxW={"2xl"} align={"center"} spacing={6}>
-          <SocialProfileSimple />
+          <ProfileCard />
         </Stack>
       </VStack>
     </Flex>
