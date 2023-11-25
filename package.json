@@ -20,8 +20,6 @@
     "@lukso/lsp-factory.js": "^2.3.3",
     "ipfs-http-client": "^57.0.3",
     "ipfs-utils": "^9.0.7",
-    "node": "^18.7.0",
-    "node-fetch": "^2.6.7",
     "react-modal": "^3.15.1",
     "underscore": "^1.13.4",
     "web3": "^1.7.4",

@@ -9,7 +9,6 @@ import { EthereumClient } from "@web3modal/ethereum";
 const ethereumClient = new EthereumClient(config, chains);
 
 function MyApp({ Component, pageProps }) {
-  console.log("walletConnectProjectId", walletConnectProjectId);
   return (
     <WagmiConfig config={config}>
       <Web3Modal
