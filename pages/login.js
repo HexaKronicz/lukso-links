@@ -13,47 +13,24 @@ import {
   VStack,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "../contexts/GlobalContext";
+import { Web3Button } from "@web3modal/react";
+import { useAccount } from "wagmi";
 
 export default function CallToActionWithAnnotation() {
   const router = useRouter();
   const { setAccount, account } = useContext(GlobalContext);
+  const { address, isConnected } = useAccount();
 
-  // IF the user clicks the LOGIN BUTTON
-  async function loginExtension() {
-    if (!window.ethereum) {
-      alert("Please connect to Universal Profile Extension or MetaMask");
-      return;
+  useEffect(() => {
+    if (isConnected) {
+      router.push("/create");
+      setAccount(address);
     }
+  }, [isConnected]);
 
-    try {
-      // request access to the extension
-      await window.ethereum
-        .request({
-          method: "eth_requestAccounts",
-        })
-
-        .then(function (accounts) {
-          // check if any number of accounts was returned
-          // IF go to the dashboard
-          if (accounts.length) {
-            router.push("/create");
-            setAccount(accounts[0]);
-          } else {
-            console.log("User denied access");
-          }
-        });
-    } catch (error) {
-      if (error.message === "User denied access") {
-        console.log("User denied access");
-      } else {
-        console.log(error);
-      }
-    }
-  }
   return (
     <>
       <Flex
@@ -82,7 +59,7 @@ export default function CallToActionWithAnnotation() {
                   lineHeight={"110%"}
                   color={"white"}
                 >
-                  Connect Metamask Wallet
+                  Connect Universal Profile
                 </Heading>
                 <Stack
                   direction={"column"}
@@ -91,18 +68,7 @@ export default function CallToActionWithAnnotation() {
                   alignSelf={"center"}
                   position={"relative"}
                 >
-                  <Button
-                    onClick={loginExtension}
-                    colorScheme={"green"}
-                    bg={"green.400"}
-                    rounded={"full"}
-                    px={6}
-                    _hover={{
-                      bg: "green.500",
-                    }}
-                  >
-                    Connect
-                  </Button>
+                  <Web3Button />
                 </Stack>
               </Stack>
             </Container>
