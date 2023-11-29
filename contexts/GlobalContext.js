@@ -9,8 +9,6 @@ import {
   isEOA,
   isL16,
 } from "../utils/connect-extension";
-import { ERC725 } from "@erc725/erc725.js";
-import erc725Schema from "@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json";
 import getProfileUrl from "../utils/get-profile-url";
 
 export const GlobalContext = createContext();
